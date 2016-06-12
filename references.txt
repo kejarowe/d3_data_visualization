@@ -1,0 +1,31 @@
+
+data_description:
+http://stat-computing.org/dataexpo/2009/the-data.html
+
+carrier csv file:
+http://stat-computing.org/dataexpo/2009/carriers.csv
+
+data:
+http://stat-computing.org/dataexpo/2009/2008.csv.bz2
+
+bar charts, x axis formatting:
+https://bost.ocks.org/mike/bar/3/
+
+further axis formatting:
+https://groups.google.com/forum/#!topic/d3-js/HDOlyOq_0UM
+http://devdocs.io/d3/svg-axes
+
+javascript dict creation:
+http://stackoverflow.com/questions/7196212/how-to-create-dictionary-and-add-key-value-pairs-dynamically-in-javascript/22315575#22315575
+
+rotate axis labels:
+http://bl.ocks.org/mbostock/4403522
+
+number formatting:
+http://bl.ocks.org/zanarmstrong/05c1e95bf7aa16c4768e
+
+axis titles:
+http://bl.ocks.org/phoebebright/3061203
+
+javascript timing:
+http://www.w3schools.com/js/js_timing.asp
