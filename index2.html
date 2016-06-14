@@ -14,6 +14,9 @@
 				margin-left: auto;
 				margin-right: auto;
 			}
+			.title {
+				font-size: 30px;
+			}
 			.axis {
 				font-family: arial;
 				font-size: 0.9em;
@@ -45,10 +48,13 @@
 
 				//setup margins, frame
 				"use strict";
-				var verticalMargin = 85,
-					horizontalMargin = 225, //add extra margin for the axis labels (Airline names)
-					width = 1400 - horizontalMargin,
-					height = 600 - verticalMargin;
+				var width = 1200,
+					height = 695,
+					topMargin = 85,
+					bottomMargin = 85,
+					leftMargin = 225, //add extra margin for the axis labels (Airline names)
+					graphWidth = width - leftMargin,
+					graphHeight = height - topMargin - bottomMargin;
 
 				//sizes of visualization elements
 				var barHeight;
@@ -61,8 +67,10 @@
 				//svg container
 				var svg = d3.select("body")
 					.append("svg")
-					.attr("width",width + horizontalMargin)
-					.attr("height",height + verticalMargin)
+					.attr("width",width)
+					.attr("height",height)
+					.append("text")
+					.attr("class","title")
 					.append('g')
 					.attr('class','chart');
 
@@ -96,7 +104,7 @@
 					return d.values['average_delay'];
 				});
 				var delay_scale = d3.scale.linear()
-					.range([horizontalMargin,width])
+					.range([leftMargin,leftMargin + graphWidth])
 					.domain(delay_extent);
 				var delay_axis = d3.svg.axis()
 					.scale(delay_scale)
@@ -108,7 +116,7 @@
 
 				//generate scale and axis for y
 				var airline_scale = d3.scale.ordinal()
-					.rangeBands([0,height])
+					.rangeBands([topMargin,topMargin+graphHeight])
 					.domain(nested.map(function(d){return airline_names[d.key];}));
 				var airline_axis = d3.svg.axis()
 					.scale(airline_scale)
@@ -116,10 +124,10 @@
 					.tickSize(6,0); 
 
 				//clear "loading..." text
-				//d3.select("#loading_text").text("");
+				d3.select("#loading_text").text("");
 
 				//update visualization element sizes
-				barHeight = ((height - verticalMargin) / nested.length) - 1;
+				barHeight = (graphHeight / nested.length) - 1;
 				var zeroDelayX = delay_scale(0);
 				var tenths_format = d3.format(".1f");
 
@@ -127,11 +135,11 @@
 				d3.select("svg")
 					.append('g')
 					.attr('class','x axis')
-					.attr('transform',"translate(0," + height + ")")
+					.attr('transform',"translate(0," + (graphHeight + topMargin) + ")")
 					.call(delay_axis)
 					.append('g')
 					.attr('class','units')
-					.attr('transform','translate(' + zeroDelayX + ',' + verticalMargin / 2 + ')') //rotate (-90)')
+					.attr('transform','translate(' + zeroDelayX + ',' + bottomMargin / 2 + ')') //rotate (-90)')
 					.append('text')
 					.style('text-anchor','start')
 					.style('font-weight','bold')
@@ -142,7 +150,7 @@
 				d3.select("svg")
 					.append('g')
 					.attr('class','y axis')
-					.attr('transform',"translate(" + horizontalMargin + ",0)")
+					.attr('transform',"translate(" + leftMargin + ",0)")
 					.call(airline_axis)
 					.selectAll("text")
 					//.attr("x",9)
@@ -155,7 +163,8 @@
 
 				//title
 				d3.select(".title")
-					.style("left",zeroDelayX + "px")
+					.attr("x",zeroDelayX)
+					.attr("y",topMargin/2)
 					.text("2008 Departure Delay Averages by Airline");
 
 				//plot the data as bars
@@ -225,7 +234,7 @@
 					};
 				}
 				function barTextY(textSize){
-					return (barHeight + textSize * 0.7) / 2; //center the text in the bar, 0.7 used as approximation of percentage of "em box" used by numbers
+					return (barHeight + textSize * 0.7) / 2; //center the text in the bar, 0.7 used as approximation of fraction of "em box" used by numbers
 				}
 
 				function draw_bar_text() {
@@ -278,6 +287,6 @@
 			/* Use D3 to load the data */
 			d3.csv("data/filtered_airline_data.csv", draw);
 		</script>
-		<h2 class="title">Loading...</h2>
+		<h2 id="loading_text">Loading...</h2>
 	</body>
 </html>
