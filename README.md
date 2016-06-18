@@ -60,3 +60,7 @@ http://lea.verou.me/2013/03/easily-center-text-vertically-with-svg/
 Text height:
 http://graphicdesign.stackexchange.com/questions/4035/what-does-the-size-of-the-font-translate-to-exactly
 http://stackoverflow.com/questions/20845711/what-is-a-fonts-em-box-em-unit-and-where-is-it-defined
+
+
+Exploratory vs Explanatory visualization:
+http://www.storytellingwithdata.com/blog/2014/04/exploratory-vs-explanatory-analysis
