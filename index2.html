@@ -2,7 +2,8 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+		<script type="text/javascript" src="https://d3js.org/d3.v3.min.js" >
+		</script>
 		<style>
 			h2 {
 				text-align: left;
@@ -26,7 +27,6 @@
 				display: none;
 			}
 			.units {
-				/*font-size: 150%;*/
 				text-anchor: middle;
 			}
 			.x line {
@@ -38,7 +38,6 @@
 			}
 			#bars text{
 				fill: black;
-				/*dominant-baseline: middle;*/
 			}
 			.bar:hover {
 				fill:brown;
@@ -53,34 +52,37 @@
 					height = 695,
 					topMargin = 85,
 					bottomMargin = 85,
-					leftMargin = 225, //add extra margin for the axis labels (Airline names)
+					//add extra margin for the axis labels (Airline names)
+					leftMargin = 225, 
 					graphWidth = width - leftMargin,
 					graphHeight = height - topMargin - bottomMargin;
 
 				//sizes of visualization elements
 				var barHeight;
-				var barTextSize = 15; //pixels
-				var barTextSizeMouseover = barTextSize * 1.3; //pixels
-				var barTextMargin = 3; //pixels
-				var barTextMarginNegativeValueOffset = 5; //pixles //there seems to be a few extra pixels above the text which are included in their height
+				var barTextSize = 15;
+				var barTextSizeMouseover = barTextSize * 1.3;
+				var barTextMargin = 3;
+				//there seems to be a few extra pixels above the text which are 
+				//included in their height
+				var barTextMarginNegativeValueOffset = 5; 
 				var animation_time = 5000;
 
 				//svg container
 				var svg = d3.select("body")
 					.append("svg")
-					.attr("width",width)
-					.attr("height",height)
+					.attr("width", width)
+					.attr("height", height)
 					.append("text")
-					.attr("class","title")
+					.attr("class", "title")
 					.append('g')
-					.attr('class','chart');
+					.attr('class', 'chart');
 
 				//data aggregation
 				function agg_delays(leaves){
-					var total_flights = d3.sum(leaves,function(d) {
+					var total_flights = d3.sum(leaves, function(d) {
 						return 1;
 					});
-					var total_minutes_delay = d3.sum(leaves,function(d) {
+					var total_minutes_delay = d3.sum(leaves, function(d) {
 						return +d['DepDelay'];
 					})
 					return {
@@ -96,8 +98,9 @@
 								})
 								.rollup(agg_delays)
 								.entries(data)
-								.sort(function(a,b){
-									return a.values['average_delay'] - b.values['average_delay'];
+								.sort(function(a, b){
+									return a.values['average_delay'] 
+									- b.values['average_delay'];
 								});
 
 				//generate scale and axis for x
@@ -105,24 +108,25 @@
 					return d.values['average_delay'];
 				});
 				var delay_scale = d3.scale.linear()
-					.range([leftMargin,leftMargin + graphWidth])
+					.range([leftMargin, leftMargin + graphWidth])
 					.domain(delay_extent);
 				var delay_axis = d3.svg.axis()
 					.scale(delay_scale)
 					.orient("bottom")
-					.tickSize(6,0);
+					.tickSize(6, 0);
 				function delayX(d){
 					return delay_scale(d.values['average_delay']);
 				}
 
 				//generate scale and axis for y
 				var airline_scale = d3.scale.ordinal()
-					.rangeBands([topMargin,topMargin+graphHeight])
-					.domain(nested.map(function(d){return airline_names[d.key];}));
+					.rangeBands([topMargin, topMargin + graphHeight])
+					.domain(nested.map(function(d){
+						return airline_names[d.key];}));
 				var airline_axis = d3.svg.axis()
 					.scale(airline_scale)
 					.orient("left")
-					.tickSize(6,0); 
+					.tickSize(6, 0); 
 
 				//clear "loading..." text
 				d3.select("#loading_text").text("");
@@ -135,60 +139,57 @@
 				//draw x axis
 				d3.select("svg")
 					.append('g')
-					.attr('class','x axis')
-					.attr('transform',"translate(0," + (graphHeight + topMargin) + ")")
+					.attr('class', 'x axis')
+					.attr('transform',"translate(0," + (graphHeight 
+						+ topMargin) + ")")
 					.call(delay_axis)
 					.append('g')
-					.attr('class','units')
-					.attr('transform','translate(' + zeroDelayX + ',' + bottomMargin / 2 + ')') //rotate (-90)')
+					.attr('class', 'units')
+					.attr('transform','translate(' + zeroDelayX + ',' 
+						+ bottomMargin / 2 + ')')
 					.append('text')
-					.style('text-anchor','start')
-					.style('font-weight','bold')
+					.style('text-anchor', 'start')
+					.style('font-weight', 'bold')
 					.text('Average Departure Delay (minutes)');
 
 
 				//draw y axis
 				d3.select("svg")
 					.append('g')
-					.attr('class','y axis')
-					.attr('transform',"translate(" + leftMargin + ",0)")
+					.attr('class', 'y axis')
+					.attr('transform', "translate(" + leftMargin + ", 0)")
 					.call(airline_axis)
 					.selectAll("text")
-					//.attr("x",9)
-					//.attr("y",0)
-					//.attr("dy","0.35em")
-					//.attr("transform","rotate(90)")
-					.style("text-anchor","end");
-
-				//debugger;
+					.style("text-anchor", "end");
 
 				//title
 				d3.select(".title")
-					.attr("x",zeroDelayX)
-					.attr("y",topMargin/2)
+					.attr("x", zeroDelayX)
+					.attr("y", topMargin / 2)
 					.text("2008 Departure Delay Averages by Airline");
 
 				//plot the data as bars
 				var bars = d3.select("svg")
 					.append("g")
-					.attr("id","bars")
+					.attr("id", "bars")
 					.selectAll("g")
 					.data(nested)
 					.enter()
 					.append("g")
-					.attr("class","bar")
-					.attr("transform",function(d,i){
-						return "translate(0," + airline_scale(airline_names[d.key]) + ")";
+					.attr("class", "bar")
+					.attr("transform", function(d, i){
+						return "translate(0," 
+						+ airline_scale(airline_names[d.key]) + ")";
 					});
 
 				//plot all bars with animation
 				bars.append("rect")
-					.attr("x",zeroDelayX)
-					.attr("width",0)
-					.attr("height",barHeight)
+					.attr("x", zeroDelayX)
+					.attr("width", 0)
+					.attr("height", barHeight)
 					.transition()
 					.duration(animation_time)
-					.attr("x",function(d){
+					.attr("x", function(d){
 						var thisDelayX = delayX(d);
 						if (thisDelayX < zeroDelayX) {
 							return thisDelayX;
@@ -197,7 +198,7 @@
 							return zeroDelayX;
 						}
 					})
-					.attr("width",function(d){
+					.attr("width", function(d){
 						var thisDelayX = delayX(d);
 						if (thisDelayX < zeroDelayX) {
 							return zeroDelayX - thisDelayX;
@@ -206,8 +207,8 @@
 							return thisDelayX - zeroDelayX;
 						}
 					})
-					.attr("height",barHeight)
-					.attr("fill-opacity",function(d){
+					.attr("height", barHeight)
+					.attr("fill-opacity", function(d){
 						var thisDelayX = delayX(d);
 						if (thisDelayX < zeroDelayX){
 							return 0.7;
@@ -222,53 +223,54 @@
 					return function(d){
 						var thisDelayX = delayX(d);
 						if (thisDelayX < zeroDelayX){
-							//debugger;
 							d3.select(this)
-							.style("text-anchor","start");
+							.style("text-anchor", "start");
 							return thisDelayX + barTextMargin;
 						}
 						else {
 							d3.select(this)
-							.style("text-anchor","end");
+							.style("text-anchor", "end");
 							return thisDelayX - barTextMargin;
 						}
 					};
 				}
 				function barTextY(textSize){
-					return (barHeight + textSize * 0.7) / 2; //center the text in the bar, 0.7 used as approximation of fraction of "em box" used by numbers
+					//center the text in the bar, 0.7 used as approximation of 
+					//fraction of "em box" used by numbers
+					return (barHeight + textSize * 0.7) / 2; 
 				}
 
 				function draw_bar_text() {
 					bars.append("text")
-					.attr("x",barTextX(barTextSize))
-					.attr("y",barTextY(barTextSize))
-					.style("font-size",barTextSize + "px")
+					.attr("x", barTextX(barTextSize))
+					.attr("y", barTextY(barTextSize))
+					.style("font-size", barTextSize + "px")
 					.text(function(d){
 						return tenths_format(d.values['average_delay']);
 					});
 				}
-				setTimeout(draw_bar_text,animation_time);
+				setTimeout(draw_bar_text, animation_time);
 
 				//increase size of bar text on mouseover
-				bars.on("mouseover",function(d){
+				bars.on("mouseover", function(d){
 					//reset bar text for all bars
 					bars.selectAll("text")
-					.attr("y",barTextY(barTextSize))
-					.style("font-size",barTextSize + "px");
+					.attr("y", barTextY(barTextSize))
+					.style("font-size", barTextSize + "px");
 
 					//increase bar text size for this bar
 					d3.select(this)
 					.select("text")
-					.attr("y",barTextY(barTextSizeMouseover))
-					.style("font-size",barTextSizeMouseover + "px");
+					.attr("y", barTextY(barTextSizeMouseover))
+					.style("font-size", barTextSizeMouseover + "px");
 				});
 				//decrease size of bar text on mouse leave
-				bars.on("mouseleave",function(d){
+				bars.on("mouseleave", function(d){
 					//reset bar text to original size 
 					d3.select(this)
 					.select("text")
-					.attr("y",barTextY(barTextSize))
-					.style("font-size",barTextSize + "px");
+					.attr("y", barTextY(barTextSize))
+					.style("font-size", barTextSize + "px");
 				});
 
 			}
@@ -285,7 +287,7 @@
 	</head>
 	<body>
 		<script type="text/javascript">
-			/* Use D3 to load the data */
+			// Use D3 to load the data
 			d3.csv("data/filtered_airline_data.csv", draw);
 		</script>
 		<h2 id="loading_text">Loading...</h2>
