@@ -327,9 +327,10 @@
 	<body>
 		<script type="text/javascript">
 			// Load the mapping from airline codes to airline names
-			d3.csv("carriers.csv", populate_airline_names, function(data){});
-			// Use D3 to load the data
-			d3.csv("data/aggregated_airline_data.csv", draw);
+			d3.csv("carriers.csv", populate_airline_names, function(data){
+				// Use D3 to load the data
+				d3.csv("data/aggregated_airline_data.csv", draw);
+			});
 		</script>
 		<h2 id="loading_text"></h2>
 	</body>
