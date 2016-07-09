@@ -319,12 +319,14 @@
 				airline_names[d['Code']] = d['Description'];
 				return d;
 			}
-			d3.csv("carriers.csv", populate_airline_names, function(data){});
+			
 
 		</script>
 	</head>
 	<body>
 		<script type="text/javascript">
+			// Load the mapping from airline codes to airline names
+			d3.csv("carriers.csv", populate_airline_names, function(data){});
 			// Use D3 to load the data
 			d3.csv("data/aggregated_airline_data.csv", draw);
 		</script>
