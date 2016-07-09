@@ -137,6 +137,7 @@
 				var airline_scale = d3.scale.ordinal()
 					.rangeBands([topMargin, topMargin + graphHeight])
 					.domain(nested.map(function(d){
+						console.log("code: " + d.key + ", name: " + airline_names[d.key]);
 						return airline_names[d.key];}));
 				var airline_axis = d3.svg.axis()
 					.scale(airline_scale)
